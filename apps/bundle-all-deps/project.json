@@ -4,6 +4,40 @@
   "sourceRoot": "apps/bundle-all-deps/src",
   "projectType": "application",
   "targets": {
+    "rspack-build": {
+      "executor": "@nx/rspack:rspack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/bundle-all-deps-rspack",
+        "main": "apps/bundle-all-deps/src/main.ts",
+        "tsConfig": "apps/bundle-all-deps/tsconfig.app.json",
+        "assets": ["apps/bundle-all-deps/src/assets"],
+        "isolatedConfig": true,
+        "rspackConfig": "apps/bundle-all-deps/rspack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "rspack-serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "bundle-all-deps:rspack-build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "bundle-all-deps:rspack-build:development"
+        },
+        "production": {
+          "buildTarget": "bundle-all-deps:rspack-build:production"
+        }
+      }
+    },
     "build": {
       "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
@@ -11,7 +45,7 @@
       "options": {
         "target": "node",
         "compiler": "tsc",
-        "outputPath": "dist/apps/bundle-all-deps",
+        "outputPath": "dist/apps/bundle-all-deps-webpack",
         "main": "apps/bundle-all-deps/src/main.ts",
         "tsConfig": "apps/bundle-all-deps/tsconfig.app.json",
         "assets": ["apps/bundle-all-deps/src/assets"],
