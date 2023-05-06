@@ -1,0 +1,64 @@
+{
+  "name": "bundle-all-deps",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/bundle-all-deps/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/bundle-all-deps",
+        "main": "apps/bundle-all-deps/src/main.ts",
+        "tsConfig": "apps/bundle-all-deps/tsconfig.app.json",
+        "assets": ["apps/bundle-all-deps/src/assets"],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/bundle-all-deps/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "bundle-all-deps:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "bundle-all-deps:build:development"
+        },
+        "production": {
+          "buildTarget": "bundle-all-deps:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/bundle-all-deps/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/bundle-all-deps/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    }
+  },
+  "tags": []
+}
